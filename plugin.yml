@@ -1,0 +1,9 @@
+name: CreativeElytra
+version: 1.01
+main: me.F_o_F_1092.CreativeElytra.Main
+author: F_o_F_1092
+commands:
+  CreativeElytra:
+    description: none
+    usage: /CreativeElytra
+    aliases: [ce]
