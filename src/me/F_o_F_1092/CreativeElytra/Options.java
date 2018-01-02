@@ -7,5 +7,6 @@ public class Options {
 
 	public static ArrayList<String> creativeElytraPlayers = new ArrayList<String>();
 	public static HashMap<String, String> msg = new HashMap<String, String>();
+	public static boolean showBlockMessage;
 
 }

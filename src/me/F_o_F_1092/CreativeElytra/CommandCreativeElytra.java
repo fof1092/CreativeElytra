@@ -50,7 +50,7 @@ public class CommandCreativeElytra implements CommandExecutor {
 							if (args.length == 1) {
 							HelpPageListener.sendMessage(p, 0);
 						} else {
-							if (!Math.isNumber(args[1])) {
+							if (!Math.isInt(args[1])) {
 								String replaceCommand = Options.msg.get("msg.9");
 								replaceCommand = replaceCommand.replace("[COMMAND]", CommandListener.getCommand("/ce help (Page)").getColoredCommand());
 								cs.sendMessage(Options.msg.get("[CreativeElytra]") + replaceCommand); 
@@ -163,10 +163,10 @@ public class CommandCreativeElytra implements CommandExecutor {
 									ymlFilePlayers.set("Players", Options.creativeElytraPlayers);
 									ymlFilePlayers.save(filePlayers);
 								} catch (IOException e) {
-									System.out.println("\u001B[31m[CreativeElytra] Can't save the Players.yml. [" + e.getMessage() +"]\u001B[0m");
+									ServerLog.err("Can't save the Players.yml. [" + e.getMessage() +"]");
 								}
 							} else {
-								System.out.println("\u001B[31m[CreativeElytra] Can't save the Players.yml. [File not found!]\u001B[0m");
+								ServerLog.err("Can't save the Players.yml. [File not found!]");
 							}
 						}
 					}
@@ -185,6 +185,25 @@ public class CommandCreativeElytra implements CommandExecutor {
 						
 						Options.creativeElytraPlayers.clear();
 						
+						
+						File fileConfig = new File("plugins/CreativeElytra/Config.yml");
+						FileConfiguration ymlFileConfig = YamlConfiguration.loadConfiguration(fileConfig);
+						
+						if (!fileConfig.exists()) {
+							try {
+								ymlFileConfig.set("Version", UpdateListener.getUpdateDoubleVersion());
+								ymlFileConfig.set("ColoredConsoleText", true);
+								ymlFileConfig.set("ShowBlockMessage", true);
+								ymlFileConfig.save(fileConfig);
+							} catch (IOException e) {		
+								ServerLog.err("Can't create the Config.yml. [" + e.getMessage() +"]");
+							}
+						}
+						
+						ServerLog.setUseColoredColores(ymlFileConfig.getBoolean("ColoredConsoleText"));
+						Options.showBlockMessage = ymlFileConfig.getBoolean("ShowBlockMessage");
+
+						
 						File filePlayers = new File("plugins/CreativeElytra/Players.yml");
 						FileConfiguration ymlFilePlayers = YamlConfiguration.loadConfiguration(filePlayers);
 
@@ -194,7 +213,7 @@ public class CommandCreativeElytra implements CommandExecutor {
 								ymlFilePlayers.set("Players", Options.creativeElytraPlayers);
 								ymlFilePlayers.save(filePlayers);
 							} catch (IOException e) {
-								ServerLog.log("§f[§6CreativeElytra§f]§4 Can't create the Players.yml. [" + e.getMessage() +"]");
+								ServerLog.err("Can't create the Players.yml. [" + e.getMessage() +"]");
 							}
 						}
 						
@@ -213,8 +232,8 @@ public class CommandCreativeElytra implements CommandExecutor {
 								ymlFileMessage.set("Color.2", "&e");
 								ymlFileMessage.set("Message.1", "You have to be a player to use this command.");
 								ymlFileMessage.set("Message.2", "You do not have the permission for this command.");
-								ymlFileMessage.set("Message.3", "Toggle-Mode &eON.");
-								ymlFileMessage.set("Message.4", "Toggle-Mode &4OFF.");
+								ymlFileMessage.set("Message.3", "Toggle-Mode &eON&6.");
+								ymlFileMessage.set("Message.4", "Toggle-Mode &4OFF&6.");
 								ymlFileMessage.set("Message.5", "Your Elytra hasn't been removed because your Elytra-Toggle-Mode is on.");
 								ymlFileMessage.set("Message.6", "There is a new update available for this plugin. &e( https://fof1092.de/Plugins/CE )&6");
 								ymlFileMessage.set("Message.7", "The plugin is reloading...");
@@ -229,8 +248,8 @@ public class CommandCreativeElytra implements CommandExecutor {
 								ymlFileMessage.set("HelpText.3", "This command is reloading the Messages.yml file.");
 								ymlFileMessage.set("HelpText.4", "This command is toggeling the Elytra-Mode.");
 								ymlFileMessage.save(fileMessages);
-							} catch (IOException e1) {
-								ServerLog.log("§f[§6CreativeElytra§f]§4 Can't create the Messages.yml. [" + e1.getMessage() +"]");
+							} catch (IOException e) {
+								ServerLog.err("Can't create the Messages.yml. [" + e.getMessage() +"]");
 							}
 						}
 
@@ -260,13 +279,13 @@ public class CommandCreativeElytra implements CommandExecutor {
 						CommandListener.addCommand(new me.F_o_F_1092.CreativeElytra.PluginManager.Command("/ce toggle", "CreativeElytra.Toggle", ChatColor.translateAlternateColorCodes('&', ymlFileMessage.getString("HelpText.4"))));
 
 
-						cs.sendMessage(Options.msg.get("[TimeVote]") + Options.msg.get("msg.8"));
+						cs.sendMessage(Options.msg.get("[CreativeElytra]") + Options.msg.get("msg.8"));
 					}
 				}
 			} else {
 				String replaceCommand = Options.msg.get("msg.9");
-				replaceCommand = replaceCommand.replace("[COMMAND]", CommandListener.getCommand("/tv help (Page)").getColoredCommand());
-				cs.sendMessage(Options.msg.get("[TimeVote]") + replaceCommand); 
+				replaceCommand = replaceCommand.replace("[COMMAND]", CommandListener.getCommand("/ce help (Page)").getColoredCommand());
+				cs.sendMessage(Options.msg.get("[CreativeElytra]") + replaceCommand); 
 			}
 		}
 		return true;

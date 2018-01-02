@@ -36,7 +36,7 @@ public class HelpPageListener {
 			stringLastPageMessage2 = new JSONMessage("");
 		}
 		
-		JSONMessage stringHeaderMessage = new JSONMessage(Options.msg.get("color.1") + "§m---------§r " + pluginNametag.replace("§l", "") + Options.msg.get("color.1") + "§m---------");
+		JSONMessage stringHeaderMessage = new JSONMessage(Options.msg.get("color.1") + "§m-----§r " + pluginNametag.replace("§l", "") + Options.msg.get("color.1") + "§m-----");
 		
 		JSONMessage stringNextPageMessage1;
 		JSONMessage stringNextPageMessage2;

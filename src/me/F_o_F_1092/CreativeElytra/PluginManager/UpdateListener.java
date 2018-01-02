@@ -3,16 +3,15 @@ package me.F_o_F_1092.CreativeElytra.PluginManager;
 public class UpdateListener {
 
 	protected static boolean updateAvailable = false;
+	public static boolean showUpdateMessage;
 	protected static double updateDouble;
 	protected static String updateString;
-	protected static String versionURL;
-	protected static String tag;
+	protected static int resourceID;
 	
-	public static void initializeUpdateListener(double updateDouble, String updateString, String versionURL, String tag) {
+	public static void initializeUpdateListener(double updateDouble, String updateString, int resourceID) {
 		UpdateListener.updateDouble = updateDouble;
 		UpdateListener.updateString = updateString;
-		UpdateListener.versionURL = versionURL;
-		UpdateListener.tag = tag;
+		UpdateListener.resourceID = resourceID;
 	}
 	
 	public static double getUpdateDoubleVersion() {
@@ -25,5 +24,9 @@ public class UpdateListener {
 	
 	public static boolean isAnewUpdateAvailable() {
 		return updateAvailable;
+	}
+	
+	public static boolean isUpdateMessageVisible() {
+		return showUpdateMessage;
 	}
 }

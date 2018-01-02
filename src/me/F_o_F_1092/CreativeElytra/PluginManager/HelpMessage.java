@@ -41,9 +41,9 @@ public class HelpMessage {
 		if (VersionManager.getServerType() == ServerType.BUKKIT) {
 			this.jsonHelpMessage = me.F_o_F_1092.CreativeElytra.PluginManager.Spigot.JSONMessageListener.putJSONMessagesTogether(jsonMessages);
 		} else if (VersionManager.getServerType() == ServerType.BUNGEECORD) {
-			//this.jsonHelpMessage = me.F_o_F_1092.ControllerBlockReloaded.PluginManager.BungeeCord.JSONMessageListener.putJSONMessagesTogether(jsonMessages);
+			//this.jsonHelpMessage = me.F_o_F_1092.MysteriousHalloween.PluginManager.Bungeecord.JSONMessageListener.putJSONMessagesTogether(jsonMessages);
 		}
-		this.helpMessage = Options.msg.get("color.2") + commandColloredString + " Â§f" + helpMessage;
+		this.helpMessage = Options.msg.get("color.2") + commandColloredString + " §f" + helpMessage;
 	}
 	
 	public String getJsonString() {

@@ -3,6 +3,7 @@ package me.F_o_F_1092.CreativeElytra;
 import java.io.File;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.F_o_F_1092.CreativeElytra.PluginManager.Command;
 import me.F_o_F_1092.CreativeElytra.PluginManager.CommandListener;
 import me.F_o_F_1092.CreativeElytra.PluginManager.ServerLog;
+import me.F_o_F_1092.CreativeElytra.PluginManager.VersionManager;
+import me.F_o_F_1092.CreativeElytra.PluginManager.VersionManager.ServerType;
 import me.F_o_F_1092.CreativeElytra.PluginManager.Spigot.HelpPageListener;
 import me.F_o_F_1092.CreativeElytra.PluginManager.Spigot.UpdateListener;
 
@@ -32,7 +35,8 @@ public class Main extends JavaPlugin {
 
 		plugin = this;
 		
-		UpdateListener.initializeUpdateListener(1.01, "1.0.1", "https://fof1092.de/Plugins/CE/version.txt", "§f[§6CreativeElytra§f]");
+		ServerLog.setPluginTag("§f[§6CreativeElytra§f]§6");
+		UpdateListener.initializeUpdateListener(1.03, "1.0.3", 37226);
 		UpdateListener.checkForUpdate();
 		
 
@@ -43,6 +47,10 @@ public class Main extends JavaPlugin {
 		this.getCommand("CreativeElytra").setTabCompleter(new CommandCreativeElytraTabCompleter());
 
 		
+		VersionManager.setVersionManager(Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3], ServerType.BUKKIT, false);
+		
+		
+		
 		File fileConfig = new File("plugins/CreativeElytra/Config.yml");
 		FileConfiguration ymlFileConfig = YamlConfiguration.loadConfiguration(fileConfig);
 		
@@ -50,14 +58,31 @@ public class Main extends JavaPlugin {
 			try {
 				ymlFileConfig.set("Version", UpdateListener.getUpdateDoubleVersion());
 				ymlFileConfig.set("ColoredConsoleText", true);
+				ymlFileConfig.set("ShowBlockMessage", true);
 				ymlFileConfig.save(fileConfig);
 			} catch (IOException e) {		
-				ServerLog.log("§f[§6CreativeElytra§f]§4 Can't create the Config.yml. [" + e.getMessage() +"]");
+				ServerLog.err("Can't create the Config.yml. [" + e.getMessage() +"]");
+			}
+		} else {
+			double version = ymlFileConfig.getDouble("Version");
+			if (version < UpdateListener.getUpdateDoubleVersion()) {
+				try {
+					
+					if (version <= 1.02) {
+						ymlFileConfig.set("ShowBlockMessage", true);
+					}
+					
+					ymlFileConfig.set("Version", UpdateListener.getUpdateDoubleVersion());
+					ymlFileConfig.save(fileConfig);
+				} catch (IOException e) {
+					ServerLog.err("Can't update the Config.yml. [" + e.getMessage() +"]");
+				}
 			}
 		}
 		
 		ServerLog.setUseColoredColores(ymlFileConfig.getBoolean("ColoredConsoleText"));
-		
+		Options.showBlockMessage = ymlFileConfig.getBoolean("ShowBlockMessage");
+
 		
 		File filePlayers = new File("plugins/CreativeElytra/Players.yml");
 		FileConfiguration ymlFilePlayers = YamlConfiguration.loadConfiguration(filePlayers);
@@ -68,7 +93,7 @@ public class Main extends JavaPlugin {
 				ymlFilePlayers.set("Players", Options.creativeElytraPlayers);
 				ymlFilePlayers.save(filePlayers);
 			} catch (IOException e) {
-				ServerLog.log("§f[§6CreativeElytra§f]§4 Can't create the Players.yml. [" + e.getMessage() +"]");
+				ServerLog.err("Can't create the Players.yml. [" + e.getMessage() +"]");
 			}
 		} else {
 			double version = ymlFilePlayers.getDouble("Version");
@@ -77,14 +102,14 @@ public class Main extends JavaPlugin {
 					ymlFilePlayers.set("Version", UpdateListener.getUpdateDoubleVersion());
 					ymlFilePlayers.save(filePlayers);
 				} catch (IOException e) {
-					ServerLog.log("§f[§6CreativeElytra§f]§4 Can't save the Players.yml. [" + e.getMessage() +"]");
+					ServerLog.err("Can't update the Players.yml. [" + e.getMessage() +"]");
 				}
 			}
 		}
 		
 		Options.creativeElytraPlayers.addAll(ymlFilePlayers.getStringList("Players"));
-		
 
+		
 		File fileMessages = new File("plugins/CreativeElytra/Messages.yml");
 		FileConfiguration ymlFileMessage = YamlConfiguration.loadConfiguration(fileMessages);
 
@@ -97,8 +122,8 @@ public class Main extends JavaPlugin {
 				ymlFileMessage.set("Color.2", "&e");
 				ymlFileMessage.set("Message.1", "You have to be a player to use this command.");
 				ymlFileMessage.set("Message.2", "You do not have the permission for this command.");
-				ymlFileMessage.set("Message.3", "Toggle-Mode &eON.");
-				ymlFileMessage.set("Message.4", "Toggle-Mode &4OFF.");
+				ymlFileMessage.set("Message.3", "Toggle-Mode &eON&6.");
+				ymlFileMessage.set("Message.4", "Toggle-Mode &4OFF&6.");
 				ymlFileMessage.set("Message.5", "Your Elytra hasn't been removed because your Elytra-Toggle-Mode is on.");
 				ymlFileMessage.set("Message.6", "There is a new update available for this plugin. &e( https://fof1092.de/Plugins/CE )&6");
 				ymlFileMessage.set("Message.7", "The plugin is reloading...");
@@ -113,8 +138,8 @@ public class Main extends JavaPlugin {
 				ymlFileMessage.set("HelpText.3", "This command is reloading the Messages.yml file.");
 				ymlFileMessage.set("HelpText.4", "This command is toggeling the Elytra-Mode.");
 				ymlFileMessage.save(fileMessages);
-			} catch (IOException e1) {
-				ServerLog.log("§f[§6CreativeElytra§f]§4 Can't create the Messages.yml. [" + e1.getMessage() +"]");
+			} catch (IOException e) {
+				ServerLog.err("Can't create the Messages.yml. [" + e.getMessage() +"]");
 			}
 		} else {
 			double version = ymlFileMessage.getDouble("Version");
@@ -123,7 +148,7 @@ public class Main extends JavaPlugin {
 					ymlFileMessage.set("Version", UpdateListener.getUpdateDoubleVersion());
 					ymlFileMessage.save(fileMessages);
 				} catch (IOException e) {
-					ServerLog.log("§f[§6CreativeElytra§f]§4 Can't save the Messages.yml. [" + e.getMessage() +"]");
+					ServerLog.err("Can't update the Messages.yml [" + e.getMessage() +"]");
 				}
 			}
 		}

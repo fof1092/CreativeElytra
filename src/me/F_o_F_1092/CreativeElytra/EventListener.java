@@ -26,13 +26,15 @@ public class EventListener implements Listener {
 	public void InventoryShiftElytraDeleteEvent(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
 		
-		if (e.getSlot() == 6) {
+		if (e.getSlot() == 38) {
 			if (e.getCurrentItem().getType() == Material.ELYTRA) {
 				if (Options.creativeElytraPlayers.contains(p.getUniqueId().toString())) {
 					e.setCancelled(true);
 					p.updateInventory();
 					
-					p.sendMessage(Options.msg.get("[CreativeElytra]") + Options.msg.get("msg.5"));
+					if(Options.showBlockMessage) {
+						p.sendMessage(Options.msg.get("[CreativeElytra]") + Options.msg.get("msg.5"));
+					}
 				}
 			}
 		}
