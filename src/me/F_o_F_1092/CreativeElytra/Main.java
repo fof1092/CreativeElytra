@@ -36,7 +36,7 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		
 		ServerLog.setPluginTag("§f[§6CreativeElytra§f]§6");
-		UpdateListener.initializeUpdateListener(1.04, "1.0.4", 37226);
+		UpdateListener.initializeUpdateListener(1.05, "1.0.5", 37226);
 		UpdateListener.checkForUpdate();
 		
 
